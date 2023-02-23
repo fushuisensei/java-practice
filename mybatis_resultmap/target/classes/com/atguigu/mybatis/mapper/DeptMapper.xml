@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.DeptMapper">
+	<select id="getEmpAndDeptByStepTwo" resultType="Dept">
+		select * from t_dept where dept_id=#{deptId}
+	</select>
+	<resultMap id="empAndDeptResultMap" type="Dept">
+		<id column="dept_id" property="deptId"></id>
+		<result column="dept_name" property="deptName"></result>
+
+		<!--        association:用于处理多对一的映射关系
+                    property:设置需要处理映射关系的属性的属性名
+                    javaType:设置要处理的属性的类型-->
+		<collection property="emps" ofType="Emp">
+			<id column="emp_id" property="empId"></id>
+			<result column="emp_name" property="empName"></result>
+			<result column="age" property="age"></result>
+			<result column="gender" property="gender"></result>
+		</collection>
+	</resultMap>
+
+	<select id="getDeptAndEmpByDeptId" resultMap="empAndDeptResultMap">
+		select t_dept.*,t_emp.* from t_dept left join t_emp on t_dept.dept_id=t_emp.dept_id where t_dept.dept_id=#{deptId}
+	</select>
+	<resultMap id="deptAndEmpResultMapByStep" type="Dept">
+		<id column="dept_id" property="deptId"></id>
+		<result column="dept_name" property="deptName"></result>
+		<collection property="emps" fetchType="lazy" select="com.atguigu.mybatis.mapper.EmpMapper.getDeptAndEmpByStepTwo"
+					column="dept_id"></collection>
+	</resultMap>
+	<select id="getDeptAndEmpByStepOne" resultMap="deptAndEmpResultMapByStep">
+		select * from t_dept where dept_id=#{deptId}
+	</select>
+
+
+</mapper>

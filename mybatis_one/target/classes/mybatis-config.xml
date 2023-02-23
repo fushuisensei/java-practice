@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--
+         MyBatis核心配置文件中，标签的顺序：
+         properties?,settings?,typeAliases?,typeHandlers?,
+         objectFactory?,objectWrapperFactory?,reflectorFactory?,
+         plugins?,environments?,databaseIdProvider?,mappers?
+	-->
+<!-- 引入properties文件，此后就可以在当前文件中使用${key}的方式访问value-->
+    <properties resource="jdbc.properties" />
+    <typeAliases>
+<!--        <typeAlias type="com.example.mybatis.pojo.User" />-->
+<!--                   alias="123"/>-->
+        <package name="com.example.mybatis.pojo"/> <!--以包为单位，将包下所有的类型设置默认的类型别名，即类名且不区分大小写-->
+    </typeAliases>
+    <!--设置类型别名，在mybatis的范围中，就可以使用别名来表示一个具体的类型
+                     type：设置需要设置别名的类型
+			         alias：设置某个类型的别名，若不设置该属性，那么该类型拥有默认的别名，
+			         即类名,且不区分大小写-->
+    <!--配置连接数据库的环境-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+        <!--default:设置默认使用的环境的id
+            enviroment:这只一个具体链接数据库的环境
+              id:设置环境的唯一标识，不能重复-->
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <!-- transactionManager:设置事务管理器
+                 type :设置事务管理的方式
+                 type=”JDBC|MANAGED“
+                 JDBC：表示使用JDBC中原生的事务管理方式
+                 MANAGED:被管理，例如Spring-->
+
+            <dataSource type="POOLED">
+                <!--    dataSource:设置数据源
+                        属性：
+                        type:设置数据源的类型
+                        type:"POOLED|UNPOOLED|JNDI
+                        POOLED：表示使用数据库连接池"-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="$"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+
+    </environments>
+
+    <!--引入映射文件-->
+    <mappers>
+        <!--<mapper resource="mappers/UserMapper.xml"/>-->
+        <!--
+          以包为单位引入映射文件
+             要求：
+             1、mapper接口所在的包要和映射文件所在的包一致
+             2、mapper接口要和映射文件的名字一致
+        -->
+        <package name="com.example.mybatis.mapper"/>
+    </mappers>
+
+
+
+    <!--引入mybatis的映射文件-->
+<!--    <mappers>-->
+<!--        <mapper resource="mappers/UserMapper.xml"/>-->
+<!--    </mappers>-->
+</configuration>
